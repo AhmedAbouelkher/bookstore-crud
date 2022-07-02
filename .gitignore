@@ -23,3 +23,5 @@ go.work
 server
 *.env
 *.sqlite
+.DS_Store
+*.log
