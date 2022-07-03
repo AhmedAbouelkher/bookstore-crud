@@ -2,7 +2,6 @@ package main
 
 import (
 	"bookstore-crud/pkg/configs"
-	"bookstore-crud/pkg/controllers"
 	"bookstore-crud/pkg/middlewares"
 	"bookstore-crud/pkg/routes"
 	"log"
@@ -13,12 +12,14 @@ import (
 
 func main() {
 	configs.ConnectToDatabase()
-	controllers.InitBookMigrations();
 	defer configs.CloseDB()
 
 	router := mux.NewRouter()
+	
 	routes.RegisterWelcomeRoute(router)
 	routes.RegisterBooksRoutes(router)
+	routes.RegisterAuthorsRoutes(router)
+	
 	router.Use(middlewares.ContentTypeApplicationJsonMiddleware)
 
 	srv := &http.Server{

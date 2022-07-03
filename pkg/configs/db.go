@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"bookstore-crud/pkg/models"
 	"log"
 
 	"gorm.io/driver/sqlite"
@@ -15,9 +16,11 @@ func ConnectToDatabase() {
 	if err != nil  {
 		panic(err)
 	}
-	
 	log.Println("Database is up and running...")
+	
 	db = database
+	
+	syncTables()
 }
 
 func GetDB() *gorm.DB {
@@ -31,4 +34,10 @@ func CloseDB() error {
 	}
 
 	return sql.Close()
+}
+
+func syncTables() {
+	db.AutoMigrate(&models.Book{}, &models.Author{})
+	
+	log.Println("Tables have been auto migrated")
 }

@@ -4,19 +4,11 @@ import (
 	"bookstore-crud/pkg/configs"
 	"bookstore-crud/pkg/models"
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
-	"github.com/manveru/faker"
 )
 
-
-func InitBookMigrations() {
-	db := configs.GetDB()
-	db.AutoMigrate(&models.Book{})
-}
-
+// General Books
 
 func FetchAllBooksHandler(res http.ResponseWriter, req *http.Request) {
 	db := configs.GetDB()
@@ -52,82 +44,6 @@ func FetchBookByIdHandler(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(book)
 }
 
-func CreateBookHandler(res http.ResponseWriter, req *http.Request) {
-	var book models.Book
-	err := json.NewDecoder(req.Body).Decode(&book)
-
-	if err != nil {
-		res.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(res).Encode(map[string]any{
-			"status": http.StatusBadRequest,
-			"error": err.Error(),
-		})
-		return
-	}
-
-	// Using faker
-	fake, err := faker.New("en")
-	if err != nil {
-		panic(err)
-	}
-
-	book.Title = fake.Name()
-	book.Price = fake.Rand.Float32()
-
-	db := configs.GetDB()
-	result := db.Create(&book)
-
-	if result.Error != nil {
-		throwDBHttpError(res, req, result.Error)
-		return
-	}
-
-	json.NewEncoder(res).Encode(book)
-}
-
-func UpdateBookByIdHandler(res http.ResponseWriter, req *http.Request) {
-	
-	bookId := extractIdParamFromRequest(req)
-
-	// Decode updated data
-	var bookUpdate models.Book
-	err := json.NewDecoder(req.Body).Decode(&bookUpdate)
-
-	if err != nil {
-		res.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(res).Encode(map[string]any{
-			"status": http.StatusBadRequest,
-			"error": err.Error(),
-		})
-		return
-	}
-
-	db := configs.GetDB()
-
-	// Fetching original row from database
-	var book models.Book
-	result := db.First(&book, bookId)
-	
-	if result.Error != nil {
-		throwDBHttpError(res, req, result.Error)
-		return
-	}
-	
-	// Updating table row fields
-	book.Title = bookUpdate.Title
-	book.Price = bookUpdate.Price
-	
-	// Saving updated row from database
-	updateResult := db.Save(&book)
-	
-	if updateResult.Error != nil {
-		throwDBHttpError(res, req, result.Error)
-		return
-	}
-
-	json.NewEncoder(res).Encode(book)
-}
-
 func DeleteBookByIdHandler(res http.ResponseWriter, req *http.Request) {
 	db := configs.GetDB()
 	var book models.Book
@@ -146,21 +62,117 @@ func DeleteBookByIdHandler(res http.ResponseWriter, req *http.Request) {
 	})
 }
 
-func extractIdParamFromRequest(req *http.Request) uint {
-	params := mux.Vars(req)
-	id, err := strconv.ParseInt(params["id"], 10, 8)
-	
+// Author Books
+
+func FetchAuthorBooksByIdHandler(res http.ResponseWriter, req *http.Request) {
+	db := configs.GetDB()
+	author, err := checkAuthorId(res, req)
+
 	if err != nil {
-		return 0
+		res.WriteHeader(http.StatusNotFound)
+		sendResponse(res, Payload{
+			"message": "Failed to fetch author",
+		})
+		return
 	}
 
-	return uint(id)
+	
+	books := []models.Book{}
+	
+	dbError := db.Where("author_id = ?", author.ID).Find(&books).Error
+	if dbError != nil {
+		throwDBHttpError(res, req, dbError)
+		return
+	}
+	
+	fmt.Println(author, len(books))
+
+	json.NewEncoder(res).Encode(books)
 }
 
-func throwDBHttpError(res http.ResponseWriter, req *http.Request, err error) {
-	res.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(res).Encode(map[string]any{
-			"status": http.StatusBadRequest,
-			"error": err.Error(),
+func CreateAuthorBookByIdHandler(res http.ResponseWriter, req *http.Request) {
+	db := configs.GetDB()
+	
+	// Validate Author id
+	author, err := checkAuthorId(res, req)
+
+	if err != nil {
+		res.WriteHeader(http.StatusNotFound)
+		sendResponse(res, Payload{
+			"message": fmt.Sprintf("Failed to fetch author with id %d", author.ID),
 		})
+		return
+	}
+
+	// Create new book and attach Author id
+	var book models.Book
+	bodyErr := extractRequestBody(BodyExtraction{
+		res: res,
+		req: req,
+		decodedValue: &book,
+	})
+	
+	if bodyErr != nil {
+		return
+	}
+
+	book.Author = author
+	
+	dbError := db.Create(&book).Error
+	if dbError != nil {
+		throwDBHttpError(res, req, dbError)
+		return
+	}
+
+	sendResponse(res, book)
+}
+
+func UpdateAuthorBookByIdHandler(res http.ResponseWriter, req *http.Request) {
+	db := configs.GetDB()
+	
+	// Validate Author id
+	author, err := checkAuthorId(res, req)
+
+	if err != nil {
+		res.WriteHeader(http.StatusNotFound)
+		sendResponse(res, Payload{
+			"message": fmt.Sprintf("Failed to fetch author with id %d", author.ID),
+		})
+		return
+	}
+
+	// Decode updated data
+	var update models.Book
+
+	if extractRequestBody(BodyExtraction{
+		res: res,
+		req: req,
+		decodedValue: &update,
+	}) != nil {
+		return
+	}
+
+	bookId := extractIntegerParamFromRequest(req, "bookId")
+
+	book := models.Book{
+		ID: bookId,
+		AuthorID: int(author.ID),
+	}
+
+	// dbError := db.Where("id = ? AND author_id = ?", bookId, author.ID).First(&book).Error
+	dbError := db.Model(&book).Updates(map[string]interface{}{
+			"title": update.Title,
+			"price": update.Price,
+		},
+	).Error
+
+	if dbError != nil {
+		throwDBHttpError(res, req, dbError)
+		return
+	}
+
+	sendResponse(res, Payload{
+		"message": "Updated",
+		"book": book,
+	})
 }
