@@ -38,6 +38,8 @@ func CloseDB() error {
 
 func syncTables() {
 	db.AutoMigrate(&models.Book{}, &models.Author{})
+
+	// migrations.RunMigrations()
 	
 	log.Println("Tables have been auto migrated")
 }

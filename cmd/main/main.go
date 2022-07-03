@@ -12,6 +12,7 @@ import (
 
 func main() {
 	configs.ConnectToDatabase()
+
 	defer configs.CloseDB()
 
 	router := mux.NewRouter()
