@@ -106,21 +106,19 @@ func CreateAuthorBookByIdHandler(res http.ResponseWriter, req *http.Request) {
 
 	// Create new book and attach Author id
 	var book models.Book
-	bodyErr := extractRequestBody(BodyExtraction{
+
+	if extractRequestBody(BodyExtraction{
 		res: res,
 		req: req,
 		decodedValue: &book,
-	})
-	
-	if bodyErr != nil {
+	}) != nil {
 		return
 	}
 
-	book.Author = author
+	book.AuthorID = int(author.ID)
 	
-	dbError := db.Create(&book).Error
-	if dbError != nil {
-		throwDBHttpError(res, req, dbError)
+	if err := db.Create(&book).Error; err != nil {
+		throwDBHttpError(res, req, err)
 		return
 	}
 

@@ -88,10 +88,10 @@ func UpdateAuthorByIdHandler(res http.ResponseWriter, req *http.Request) {
 
 func DeleteAuthorByIdHandler(res http.ResponseWriter, req *http.Request) {
 	db := configs.GetDB()
-	authorId := extractIdParamFromRequest(req)
-	
-	if dbError := db.Delete(models.Author{}, authorId).Error; dbError != nil {
-		throwDBHttpError(res, req, dbError)
+	authorId := extractIntegerParamFromRequest(req, "id")
+
+	if err := db.Model(&models.Author{}).Where("id = ?", authorId).Delete(&models.Author{}).Error; err != nil {
+		throwDBHttpError(res, req, err)
 		return
 	}
 

@@ -7,7 +7,8 @@ type Author struct {
 
 	Name string `json:"name,omitempty"`
 	Age int `json:"age,omitempty"`
-	Books []Book `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Email string `json:"email,omitempty"`
+	Books []Book `json:"books" gorm:"constraint:OnDelete:CASCADE"`
 
 	CreatedAt time.Time `json:"created_at,omitempty"`
   	UpdatedAt time.Time `json:"updated_at,omitempty"`
