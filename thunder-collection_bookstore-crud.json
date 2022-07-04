@@ -1,0 +1,213 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "bookstore-crud",
+  "dateExported": "2022-07-04T08:29:33.503Z",
+  "version": "1.1",
+  "folders": [
+    {
+      "_id": "0ca254cf-d39e-4dc2-8744-8e702e38d2b3",
+      "name": "authors",
+      "containerId": "",
+      "created": "2022-07-04T08:28:23.990Z",
+      "sortNum": 10000
+    },
+    {
+      "_id": "632db627-9ad2-455c-952f-13589466e5ff",
+      "name": "books",
+      "containerId": "",
+      "created": "2022-07-04T08:28:23.991Z",
+      "sortNum": 20000
+    },
+    {
+      "_id": "358630e5-d9f1-4868-8b76-9b0878ac9fa2",
+      "name": "author books",
+      "containerId": "0ca254cf-d39e-4dc2-8744-8e702e38d2b3",
+      "created": "2022-07-04T08:28:23.992Z",
+      "sortNum": 30000
+    }
+  ],
+  "requests": [
+    {
+      "_id": "0962ed34-8ed5-409a-86bd-c99013f4973a",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "632db627-9ad2-455c-952f-13589466e5ff",
+      "name": "fetch all books",
+      "url": "{{url}}/books/",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2022-07-04T08:28:23.991Z",
+      "modified": "2022-07-04T08:28:23.991Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [],
+      "tests": []
+    },
+    {
+      "_id": "b79cc330-4d01-4717-a815-f178a8f28449",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "0ca254cf-d39e-4dc2-8744-8e702e38d2b3",
+      "name": "fetch all authors",
+      "url": "{{url}}/authors/",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2022-07-04T08:28:23.992Z",
+      "modified": "2022-07-04T08:28:23.992Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [],
+      "tests": []
+    },
+    {
+      "_id": "ddf4f036-8900-4603-997e-ef290232d322",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "358630e5-d9f1-4868-8b76-9b0878ac9fa2",
+      "name": "fetch books for author by id",
+      "url": "{{url}}/authors/{authorId}/books/",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2022-07-04T08:28:23.993Z",
+      "modified": "2022-07-04T08:28:23.993Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [{ "name": "authorId", "value": "1", "isPath": true }],
+      "tests": []
+    },
+    {
+      "_id": "58bfb021-53d0-4482-b458-28e30ea08fb2",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "0ca254cf-d39e-4dc2-8744-8e702e38d2b3",
+      "name": "create new author",
+      "url": "{{url}}/authors/",
+      "method": "POST",
+      "sortNum": 12500,
+      "created": "2022-07-04T08:28:23.994Z",
+      "modified": "2022-07-04T08:28:23.994Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n    \"name\": \"Ahmed\",\n    \"age\": 22\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "_id": "a0396ed3-873e-4da9-9fe3-2e9403697841",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "0ca254cf-d39e-4dc2-8744-8e702e38d2b3",
+      "name": "fetch author by id",
+      "url": "{{url}}/authors/{authorId}",
+      "method": "GET",
+      "sortNum": 15000,
+      "created": "2022-07-04T08:28:23.995Z",
+      "modified": "2022-07-04T08:28:23.995Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [{ "name": "authorId", "value": "2", "isPath": true }],
+      "tests": []
+    },
+    {
+      "_id": "354024f5-3279-4d85-abf5-abba35ebb02a",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "632db627-9ad2-455c-952f-13589466e5ff",
+      "name": "fetch book by id",
+      "url": "{{url}}/books/{id}",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2022-07-04T08:28:23.996Z",
+      "modified": "2022-07-04T08:28:23.996Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [{ "name": "id", "value": "3", "isPath": true }],
+      "tests": []
+    },
+    {
+      "_id": "20ed521e-fc2b-4d2a-91ec-917c4d9b6996",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "358630e5-d9f1-4868-8b76-9b0878ac9fa2",
+      "name": "create book for author by id",
+      "url": "{{url}}/authors/{authorId}/books/",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2022-07-04T08:28:23.997Z",
+      "modified": "2022-07-04T08:28:23.997Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [{ "name": "authorId", "value": "1", "isPath": true }],
+      "body": {
+        "type": "json",
+        "raw": "{\n    \"title\": \"Horizan\",\n    \"price\": 100.99\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "_id": "98d13ef8-6806-44c4-8635-acc127f98312",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "632db627-9ad2-455c-952f-13589466e5ff",
+      "name": "delete book by id",
+      "url": "{{url}}/books/{id}",
+      "method": "DELETE",
+      "sortNum": 30000,
+      "created": "2022-07-04T08:28:23.998Z",
+      "modified": "2022-07-04T08:28:23.998Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [{ "name": "id", "value": "1", "isPath": true }],
+      "tests": []
+    },
+    {
+      "_id": "9c748966-0e2c-4da5-9078-badd306702fd",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "358630e5-d9f1-4868-8b76-9b0878ac9fa2",
+      "name": "update book by id",
+      "url": "{{url}}/authors/{authorId}/books/{bookId}",
+      "method": "PUT",
+      "sortNum": 30000,
+      "created": "2022-07-04T08:28:23.999Z",
+      "modified": "2022-07-04T08:28:23.999Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [
+        { "name": "authorId", "value": "3", "isPath": true },
+        { "name": "bookId", "value": "4", "isPath": true }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n    \"title\": \"Ultimat Horizan v4\",\n    \"price\": 59.99\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "_id": "f96cb981-0f4d-419b-9e9b-aa511690b509",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "0ca254cf-d39e-4dc2-8744-8e702e38d2b3",
+      "name": "update author by id",
+      "url": "{{url}}/authors/{authorId}",
+      "method": "PUT",
+      "sortNum": 30000,
+      "created": "2022-07-04T08:28:24.000Z",
+      "modified": "2022-07-04T08:28:24.000Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [{ "name": "authorId", "value": "3", "isPath": true }],
+      "body": {
+        "type": "json",
+        "raw": "{\n    \"name\": \"Ahmed\",\n    \"age\": 24\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "_id": "304bcbf9-c021-489b-8c6a-7a15032ffd4e",
+      "colId": "2f18eeb1-9460-4e7c-8794-450fc4a6ebef",
+      "containerId": "0ca254cf-d39e-4dc2-8744-8e702e38d2b3",
+      "name": "deleta author by id",
+      "url": "{{url}}/authors/{id}",
+      "method": "DELETE",
+      "sortNum": 40000,
+      "created": "2022-07-04T08:28:24.001Z",
+      "modified": "2022-07-04T08:28:24.001Z",
+      "headers": [{ "name": "Accept", "value": "application/json" }],
+      "params": [{ "name": "id", "value": "1", "isPath": true }],
+      "tests": []
+    }
+  ],
+  "settings": {
+    "headers": [],
+    "tests": [],
+    "envId": "d9a428b6-f851-426c-8b34-fdfe3c229092"
+  }
+}
